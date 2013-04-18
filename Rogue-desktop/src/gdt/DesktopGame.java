@@ -9,8 +9,8 @@ public class DesktopGame {
 		
 		config.title = "Rogue";
 		config.useGL20 = true;
-		config.width = 480;
-		config.height = 320;
+		config.width = 1024;
+		config.height = 768;
 		
 		new LwjglApplication(new Game(), config);
 	}
