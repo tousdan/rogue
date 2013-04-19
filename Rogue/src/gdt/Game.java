@@ -2,12 +2,9 @@ package gdt;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -30,7 +27,7 @@ public class Game implements ApplicationListener {
 	Texture frostshock;
 	Rectangle frostshock_loc;
 	
-	Camera camera;
+	OrthographicCamera camera;
 	SpriteBatch batch;
 	
 	
@@ -45,7 +42,7 @@ public class Game implements ApplicationListener {
 		frostshock_loc = new Rectangle(CAMERA_WIDTH / 2 , CAMERA_HEIGHT / 2, 64, 64);
 		
 		camera = new OrthographicCamera();
-		((OrthographicCamera) camera).setToOrtho(false, CAMERA_WIDTH, CAMERA_HEIGHT);
+		camera.setToOrtho(false, CAMERA_WIDTH, CAMERA_HEIGHT);
 		
 		batch = new SpriteBatch();
 	}
@@ -159,7 +156,7 @@ public class Game implements ApplicationListener {
 	}
 	
 	private void handleCameraInput() {
-		/*if(Gdx.input.isKeyPressed(Keys.X)) {
+		if(Gdx.input.isKeyPressed(Keys.X)) {
 			camera.zoom += 0.2;
 		}
 		
@@ -167,7 +164,7 @@ public class Game implements ApplicationListener {
 			camera.zoom -= 0.2;
 		}
 		
-		camera.zoom = Math.max(camera.zoom, 1);*/
+		camera.zoom = Math.max(camera.zoom, 1);
 	}
 	
 	private void generateLevel() {
@@ -175,8 +172,6 @@ public class Game implements ApplicationListener {
 		
 		for(int w=0; w < LEVEL_WIDTH / 16; w++) {
 			for(int h=0; h < LEVEL_HEIGHT / 16 ; h++) {
-				int ref = w*h;
-				
 				Room room = Rooms.anyRoom();
 				
 				if(room != null) {
@@ -186,14 +181,11 @@ public class Game implements ApplicationListener {
 						int y = c / room.width;
 						int x = c % room.width;
 						
-						int idx = ref + x + (y * LEVEL_WIDTH);
-						
-						level[idx] = roomPart;
+						level[w * 8 + x + (h * 8 + y) * LEVEL_WIDTH] = roomPart;
 					}
 				}
 			}
 		}
-		
 	}
 
 }
