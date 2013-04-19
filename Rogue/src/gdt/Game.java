@@ -23,7 +23,6 @@ public class Game implements ApplicationListener {
 	
 	GameObject[] level;
 	
-	Texture background;
 	Texture frostshock;
 	Rectangle frostshock_loc;
 	
@@ -36,7 +35,6 @@ public class Game implements ApplicationListener {
 	public void create() {
 		generateLevel();
 		
-		background = new Texture(Gdx.files.internal("assets/raglan01.jpg"));
 		frostshock = new Texture(Gdx.files.internal("assets/frostshock.png"));
 		
 		frostshock_loc = new Rectangle(CAMERA_WIDTH / 2 , CAMERA_HEIGHT / 2, 64, 64);
@@ -85,7 +83,6 @@ public class Game implements ApplicationListener {
 				batch.draw(tex, x, y);
 			}
 		}
-	    //batch.draw(background, 0, 0);
 	    batch.draw(frostshock, frostshock_loc.x, frostshock_loc.y);
 	    batch.end();
 	}
@@ -181,7 +178,7 @@ public class Game implements ApplicationListener {
 						int y = c / room.width;
 						int x = c % room.width;
 						
-						level[w * 8 + x + (h * 8 + y) * LEVEL_WIDTH] = roomPart;
+						level[w * 16 + x + (h * 16 + y) * LEVEL_WIDTH] = roomPart;
 					}
 				}
 			}
