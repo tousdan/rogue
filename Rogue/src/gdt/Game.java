@@ -4,36 +4,48 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Game implements ApplicationListener {
+	public static final int SCREEN_WIDTH = 1024;
+	public static final int SCREEN_HEIGHT = 768;
+	
+	public static final int CAMERA_WIDTH = SCREEN_WIDTH;
+	public static final int CAMERA_HEIGHT = SCREEN_HEIGHT;
+	
+	
+	
+	private static final int LEVEL_WIDTH = 256;
+	private static final int LEVEL_HEIGHT = 256;
+	
+	GameObject[] level;
+	
 	Texture background;
 	Texture frostshock;
 	Rectangle frostshock_loc;
 	
-	OrthographicCamera camera;
+	Camera camera;
 	SpriteBatch batch;
 	
-	public static final int CAMERA_WIDTH = 480;
-	public static final int CAMERA_HEIGHT = 320;
 	
-	public static final int SCREEN_WIDTH = 1024;
-	public static final int SCREEN_HEIGHT = 768;
 	
 	@Override
 	public void create() {
+		generateLevel();
+		
 		background = new Texture(Gdx.files.internal("assets/raglan01.jpg"));
 		frostshock = new Texture(Gdx.files.internal("assets/frostshock.png"));
 		
 		frostshock_loc = new Rectangle(CAMERA_WIDTH / 2 , CAMERA_HEIGHT / 2, 64, 64);
 		
-		// TODO Auto-generated method stub
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, CAMERA_WIDTH, CAMERA_HEIGHT);
+		((OrthographicCamera) camera).setToOrtho(false, CAMERA_WIDTH, CAMERA_HEIGHT);
 		
 		batch = new SpriteBatch();
 	}
@@ -49,7 +61,6 @@ public class Game implements ApplicationListener {
 	public void render() {
 		handleInput();
 		handleCameraInput();
-		
 		centerCamera();
 		
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
@@ -59,7 +70,25 @@ public class Game implements ApplicationListener {
 	    
 	    batch.setProjectionMatrix(camera.combined);
 	    batch.begin();
-	    batch.draw(background, 0, 0);
+	    for (int i = 0; i < level.length; i++) {
+	    	GameObject o = level[i];
+	    	
+	    	if(o == null) {
+	    		continue;
+	    	}
+			Texture tex = level[i].draw();
+			
+			if(tex != null) {
+				int x = i % LEVEL_WIDTH * 8;
+				int y = i / LEVEL_WIDTH * 8;
+				
+				if(y > 0) {
+					++y;
+				}
+				batch.draw(tex, x, y);
+			}
+		}
+	    //batch.draw(background, 0, 0);
 	    batch.draw(frostshock, frostshock_loc.x, frostshock_loc.y);
 	    batch.end();
 	}
@@ -130,7 +159,7 @@ public class Game implements ApplicationListener {
 	}
 	
 	private void handleCameraInput() {
-		if(Gdx.input.isKeyPressed(Keys.X)) {
+		/*if(Gdx.input.isKeyPressed(Keys.X)) {
 			camera.zoom += 0.2;
 		}
 		
@@ -138,7 +167,33 @@ public class Game implements ApplicationListener {
 			camera.zoom -= 0.2;
 		}
 		
-		camera.zoom = Math.max(camera.zoom, 1);
+		camera.zoom = Math.max(camera.zoom, 1);*/
+	}
+	
+	private void generateLevel() {
+		level = new GameObject[LEVEL_WIDTH * LEVEL_HEIGHT];
+		
+		for(int w=0; w < LEVEL_WIDTH / 16; w++) {
+			for(int h=0; h < LEVEL_HEIGHT / 16 ; h++) {
+				int ref = w*h;
+				
+				Room room = Rooms.anyRoom();
+				
+				if(room != null) {
+					for(int c=0;c<room.contents.length; c++) {
+						GameObject roomPart = room.contents[c];
+						
+						int y = c / room.width;
+						int x = c % room.width;
+						
+						int idx = ref + x + (y * LEVEL_WIDTH);
+						
+						level[idx] = roomPart;
+					}
+				}
+			}
+		}
+		
 	}
 
 }
