@@ -4,32 +4,29 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
-public class Wall implements Cell{
-	private Texture texture;
+public class Player implements Actor {
+	private Texture character;
 	
-	public Wall() {
+	public Player() {
 		Pixmap map = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
-		map.setColor(Color.DARK_GRAY);
-		map.fillRectangle(0, 0, 8, 8);
+		map.setColor(Color.RED);
+		map.drawLine(0, 0, 8, 8);
+		map.setColor(Color.ORANGE);
+		map.drawLine(8, 0, 0, 8);
 		
-		texture = new Texture(map);
+		character = new Texture(map);
 	}
-	
 	@Override
 	public Texture draw() {
-		return texture;
+		return character;
 	}
-
-	@Override
-	public boolean isSolid() {
-		return true;
-	}
-
 	@Override
 	public boolean interact(RogueObject requestor, String intent) {
 		return false;
 	}
-	
-	
-	
+	@Override
+	public void setNewLocation(Cell location) {
+		
+	}
+
 }

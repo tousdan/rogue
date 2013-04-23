@@ -1,40 +1,73 @@
 package gdt;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Rooms {
+	private static List<Room> rooms = new ArrayList<>();
+	
 	private static Random rand = new Random();
 	
-	private static Wall w = new Wall();
-	private static GameObject _ = new GameObject();
+	public static Room SQUARE = buildRoom(8, 8,
+			"wwwwwwww" +
+			"w______w" +
+			"w______w" +
+			"w______w" +
+			"w______w" +
+			"w______w" +
+			"w______w" +
+			"wwwwwwww"
+	);
 	
-	public static Room SQUARE = new Room(8, 8, new GameObject[] {
-			w, w, w, w, w, w, w, w,
-			w, _, _, _, _, _, _, w,
-			w, _, _, _, _, _, _, w,
-			w, _, _, _, _, _, _, w,
-			w, _, _, _, _, _, _, w,
-			w, _, _, _, _, _, _, w,
-			w, _, _, _, _, _, _, w,
-			w, w, w, w, w, w, w, w
-	});
+	public static Room CAVE = buildRoom(8, 8, 
+		   "wwwwwwww" +
+		   "w______w" +
+		   "w______w" +
+		   " ww____w" +
+		   "   ww__w" +
+		   "    w_w " +
+		   "    w_w " +
+		   "     w  " 
+	);
 	
-	public static Room CAVE = new Room(8, 8, new GameObject[] {
-			w, w, w, w, w, w, w, w,
-			w, _, _, _, _, _, _, w,
-			w, _, _, _, _, _, _, w,
-			_, w, w, _, _, _, _, w,
-			_, _, _, w, w, _, _, w,
-			_, _, _, _, w, _, w, _,
-			_, _, _, _, w, _, w, _,
-			_, _, _, _, _, w, _, _
-	});
-	
-	public static Room anyRoom() {
-		Room[] rooms = new Room[] {
-			SQUARE, CAVE
-		};
-		
-		return rooms[rand.nextInt(rooms.length)];
+	public static Room anyRoom() {		
+		return rooms.get(rand.nextInt(rooms.size()));
 	}
+	
+	private static Room buildRoom(int width, int height, String contentsAsString) {
+		TextToCellFactory fact = new TextToCellFactory();
+		
+		Cell[] contents = new Cell[width * height];
+		char[] asChars = contentsAsString.toCharArray();
+		
+		assert contents.length == asChars.length;
+		
+		for (int i = 0; i < asChars.length; i++) {
+			contents[i] = fact.build(asChars[i]);
+		}
+		
+		Room r = new Room(width, height, contents);
+		
+		rooms.add(r);
+		
+		return r;
+		
+		
+	}
+	
+	static class TextToCellFactory {
+		public Cell build(char c) {
+			switch(c) {
+				case 'w':
+					return new Wall();
+				case '_':
+					return new Floor();
+				default:
+					return null;
+				 
+			}
+		}
+	}
+	
 }
