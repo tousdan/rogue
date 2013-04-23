@@ -12,6 +12,6 @@ public class DesktopGame {
 		config.width = 1024;
 		config.height = 768;
 		
-		new LwjglApplication(new Game(), config);
+		new LwjglApplication(new RogueAppListener(), config);
 	}
 }
