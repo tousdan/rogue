@@ -12,8 +12,9 @@ public class Player implements Actor {
 	public Player() {
 		Pixmap map = new Pixmap(Constants.TILE_SIZE, Constants.TILE_SIZE, Pixmap.Format.RGBA8888);
 		map.setColor(Color.RED);
-		map.drawLine(0, 0, Constants.TILE_SIZE, Constants.TILE_SIZE);
+		map.fillRectangle(0, 0, Constants.TILE_SIZE, Constants.TILE_SIZE);
 		map.setColor(Color.ORANGE);
+		map.drawLine(0, 0, Constants.TILE_SIZE, Constants.TILE_SIZE);
 		map.drawLine(Constants.TILE_SIZE, 0, 0, Constants.TILE_SIZE);
 		
 		character = new Texture(map);
@@ -32,7 +33,7 @@ public class Player implements Actor {
 		return false;
 	}
 	@Override
-	public void setNewLocation(Cell location) {
+	public void location(Cell location) {
 		this.location = location;
 	}
 }

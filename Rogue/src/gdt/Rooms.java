@@ -53,6 +53,7 @@ public class Rooms {
 		return r;
 	}
 	
+	
 	static class TextToCellFactory {
 		public CellFactory build(char c) {
 			switch(c) {

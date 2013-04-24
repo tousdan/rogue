@@ -48,9 +48,26 @@ public class Level {
 	}
 
 	public Cell cell(int x, int y) {
-		assert x < width && x > 0;
-		assert y < height && y > 0;
+		if(!inBounds(x, y))
+			return null;
 		return level[x + y * width];
+	}
+	public Cell cell(Position location) {
+		return cell(location.x, location.y);
+	}
+	public Cell cell(Locatable locatable) {
+		return cell(locatable.location());
+	}
+	
+	public boolean inBounds(int x, int y) {
+		return x < width && x >= 0
+			&& y < height && y >= 0;
+	}
+	public boolean inBounds(Position location) {
+		return inBounds(location.x, location.y);
+	}
+	public boolean inBounds(Locatable locatable) {
+		return inBounds(locatable.location());
 	}
 	
 	public Cell findRandomCell(boolean includeSolid) {

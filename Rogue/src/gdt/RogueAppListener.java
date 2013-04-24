@@ -2,6 +2,7 @@ package gdt;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -40,6 +41,9 @@ public class RogueAppListener implements ApplicationListener {
 	public void render() {
 		/*handleInput();
 		handleCameraInput();*/
+		
+		handleInput();
+		
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 	    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 	    	    
@@ -71,6 +75,24 @@ public class RogueAppListener implements ApplicationListener {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private void handleInput() {
+
+		Player pl = game.player;
+		if(Gdx.input.isKeyPressed(Keys.UP)) {
+			game.moveActor(pl, game.getAdjacentCell(pl, Direction.UP));
+		} 
+		if(Gdx.input.isKeyPressed(Keys.DOWN)) {
+			game.moveActor(pl, game.getAdjacentCell(pl, Direction.DOWN));
+		} 
+		if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			game.moveActor(pl, game.getAdjacentCell(pl, Direction.RIGHT));
+		} 
+		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
+			game.moveActor(pl, game.getAdjacentCell(pl, Direction.LEFT));
+		} 
+	}	
+	
 	
 	/*private void handleInput() {
 		if(Gdx.input.isKeyPressed(Keys.LEFT)) {

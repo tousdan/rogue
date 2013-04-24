@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Texture;
 public class Floor extends Cell {
 
 	private Texture texture;
-	private Actor content;
 	
 	public Floor(int x, int y) {
 		super(x, y);
@@ -33,8 +32,8 @@ public class Floor extends Cell {
 	public boolean interact(RogueObject requestor, String intent) {
 		if(Intents.MOVE.equals(intent)) {
 			if(requestor instanceof Actor) {
-				if(content == null) {
-					content = (Actor) requestor;
+				if(actor() == null) {
+					actor((Actor) requestor);
 					return true;
 				}
 			}
@@ -44,5 +43,4 @@ public class Floor extends Cell {
 		
 		return false;
 	}
-
 }

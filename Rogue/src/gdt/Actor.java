@@ -1,5 +1,6 @@
 package gdt;
 
-public interface Actor extends RogueObject {
-	public void setNewLocation(Cell location);
+public interface Actor extends RogueObject, Locatable {
+	Cell location();
+	void location(Cell location);
 }
