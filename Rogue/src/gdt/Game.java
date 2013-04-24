@@ -101,7 +101,7 @@ public class Game {
 	}
 
 	public void draw(SpriteBatch batch) {
-		level.draw(batch);
+		level.draw(player.location(), batch);
 		Cell playerLocation = player.location();
 		batch.draw(player.draw(), playerLocation.x * Constants.TILE_SIZE, playerLocation.y * Constants.TILE_SIZE);
 	}
