@@ -29,18 +29,11 @@ public class Floor extends Cell {
 	}
 
 	@Override
-	public boolean interact(RogueObject requestor, String intent) {
-		if(Intents.MOVE.equals(intent)) {
-			if(requestor instanceof Actor) {
-				if(actor() == null) {
-					actor((Actor) requestor);
-					return true;
-				}
-			}
-			
-			return false;
+	public boolean interact(GameEngine engine, Actor requestor, String intent) {
+		if(Intents.MOVE.equals(intent) && actor() == null) {
+			engine.performMove(requestor, this);
+			return true;
 		}
-		
 		return false;
 	}
 }

@@ -29,7 +29,7 @@ public class Player implements Actor {
 		return character;
 	}
 	@Override
-	public boolean interact(RogueObject requestor, String intent) {
+	public boolean interact(GameEngine engine, Actor requestor, String intent) {
 		return false;
 	}
 	@Override

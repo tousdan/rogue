@@ -1,6 +1,7 @@
 package gdt;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -68,6 +69,65 @@ public class Level {
 	}
 	public boolean inBounds(Locatable locatable) {
 		return inBounds(locatable.location());
+	}
+	
+	public Cell getAdjacentCell(Locatable locatable, Direction direction) {
+		Position location = locatable.location();
+		Position adjacent = location.translated(direction.dx, direction.dy);
+		
+		if(inBounds(adjacent))
+			return cell(adjacent);
+		else
+			return null;
+	}
+	
+	public List<Cell> getAdjacentCells(Locatable locatable, Direction direction, int count) {
+		List<Cell> result = new ArrayList<>();
+		
+		if(count < 1) {
+			return result;
+		}
+		
+		Position initial = locatable.location();
+		Position current = initial.translated(direction.dx, direction.dy);
+		while(count --> 0 && inBounds(current)) {
+			result.add(cell(current));
+			current = current.translated(direction.dx, direction.dy);
+		}
+		
+		return result;
+	}
+	
+	public List<Cell> getAdjacentCells(Locatable locatable, int radius, boolean round) {
+		List<Cell> result = new ArrayList<>();
+		
+		if(radius < 1) {
+			return result;
+		}
+		
+		Position initial = locatable.location();
+		Position topLeft = initial.translated(-radius, -radius);
+		Position bottomRight = initial.translated(radius, radius);
+		
+		for(int x=topLeft.x; x < bottomRight.x; x++) {
+			for(int y = topLeft.y; y < bottomRight.y; y++) {
+				Position current = new Position(x, y);
+				if(inBounds(current)) {
+					result.add(cell(current));
+				}
+			}
+		}
+		
+		if(round) {
+			Cell current = null;
+			for(Iterator<Cell> it=result.iterator(); it.hasNext(); current=it.next()) {
+				if(current.distanceTo(initial) > radius)
+					it.remove();
+			}
+		}
+		
+		return result;
+		
 	}
 	
 	public Cell findRandomCell(boolean includeSolid) {
