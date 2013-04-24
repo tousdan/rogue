@@ -28,7 +28,7 @@ public class Wall extends Cell{
 	}
 
 	@Override
-	public boolean interact(GameEngine engine, Actor requestor, String intent) {
+	public boolean interact(Game game, GameEngine engine, Actor requestor, String intent) {
 		return false;
 	}
 }

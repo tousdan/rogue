@@ -149,7 +149,7 @@ public class Level {
 		return spawnableCells.get(cellIndex);
 	}
 	
-	public void draw(Cell playerLocation, SpriteBatch canvas) {
+	public void draw(Game game, SpriteBatch canvas) {
 		for(int i=0;i<level.length;i++) {
 			Cell c = level[i];
 			
@@ -157,38 +157,27 @@ public class Level {
 				continue;
 			}
 			
-			
-			
-			
 			Texture tex = c.draw();
 			
-			
 			if(tex != null) {
-				
-				int xDistance = Math.abs(c.x - playerLocation.x);
-				int yDistance = Math.abs(c.y - playerLocation.y);
-				
-				int closestDistance = Math.max(xDistance, yDistance);
 				
 				Color color = canvas.getColor();
 				
 				//light radius = 10
-				Color adjusted = adjustColorForRadius(color, closestDistance, 10);
+				Color adjusted = adjustColorForRadius(color, c.distanceTo(game.player), 10);
 				
 				canvas.setColor(adjusted);
-				
 				canvas.draw(tex, c.x * Constants.TILE_SIZE, c.y * Constants.TILE_SIZE);
-				
 				canvas.setColor(color);
 			}
 		}
 	}
 	
-	private Color adjustColorForRadius(Color c, int distance, int treshold) {
+	private Color adjustColorForRadius(Color c, double d, int treshold) {
 		Color adjusted = new Color(c);
 		
-		if(distance < treshold) {
-			adjusted.a = 1 - (distance * 0.04f);
+		if(d < treshold) {
+			adjusted.a = (float) (1 - (d * 0.04f));
 		} else {
 			adjusted.a = 0.5f;
 		}

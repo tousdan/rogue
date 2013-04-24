@@ -16,6 +16,8 @@ public class Position implements Locatable {
 	public double distanceTo(Position other) {
 		return Math.sqrt(square(other.x - x) + square(other.y - y));
 	}
+	public double distanceTo(Locatable locatable) {
+		return distanceTo(locatable.location());
+	}
 	private int square(int x) { return x * x; }
-	
 }

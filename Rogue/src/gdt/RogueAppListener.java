@@ -1,17 +1,15 @@
 package gdt;
 
-import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 
 public class RogueAppListener extends InputAdapter implements ApplicationListener {
 	
@@ -67,7 +65,6 @@ public class RogueAppListener extends InputAdapter implements ApplicationListene
 	
 	@Override
 	public boolean keyDown(int key) {
-		
 		if(movementKeys.containsKey(key)) {
 			directionToMove = movementKeys.get(key);
 			hasMoveInput = true;
@@ -77,16 +74,20 @@ public class RogueAppListener extends InputAdapter implements ApplicationListene
 		return false;
 	}
 	
+	private void handleInput() {
+		if(hasMoveInput) {
+			game.moveActor(game.player, directionToMove);
+			game.runGameStep();
+			hasMoveInput = false;
+		}
+	}
+	
 	@Override
 	public void render() {
 		/*handleInput();
 		handleCameraInput();*/
 		
-		if(hasMoveInput) {
-			game.movePlayer(directionToMove);
-			game.runGameStep();
-			hasMoveInput = false;
-		}
+		handleInput();
 		
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 	    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
