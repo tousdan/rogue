@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -21,6 +22,7 @@ public class Level {
 		
 		for(int w=0; w < width / 16; w++) {
 			for(int h=0; h < height / 16 ; h++) {
+				
 				Room room = Rooms.anyRoom();
 				
 				if(room != null) {
@@ -147,7 +149,7 @@ public class Level {
 		return spawnableCells.get(cellIndex);
 	}
 	
-	public void draw(SpriteBatch canvas) {
+	public void draw(Cell playerLocation, SpriteBatch canvas) {
 		for(int i=0;i<level.length;i++) {
 			Cell c = level[i];
 			
@@ -155,11 +157,44 @@ public class Level {
 				continue;
 			}
 			
+			
+			
+			
 			Texture tex = c.draw();
 			
+			
 			if(tex != null) {
+				
+				int xDistance = Math.abs(c.x - playerLocation.x);
+				int yDistance = Math.abs(c.y - playerLocation.y);
+				
+				int closestDistance = Math.max(xDistance, yDistance);
+				
+				Color color = canvas.getColor();
+				
+				//light radius = 10
+				Color adjusted = adjustColorForRadius(color, closestDistance, 10);
+				
+				canvas.setColor(adjusted);
+				
 				canvas.draw(tex, c.x * Constants.TILE_SIZE, c.y * Constants.TILE_SIZE);
+				
+				canvas.setColor(color);
 			}
 		}
 	}
+	
+	private Color adjustColorForRadius(Color c, int distance, int treshold) {
+		Color adjusted = new Color(c);
+		
+		if(distance < treshold) {
+			adjusted.a = 1 - (distance * 0.04f);
+		} else {
+			adjusted.a = 0.5f;
+		}
+		
+		return adjusted;
+	}
 }
+
+

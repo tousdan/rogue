@@ -40,7 +40,9 @@ public class Rooms {
 		CellFactory[] contents = new CellFactory[width * height];
 		char[] asChars = contentsAsString.toCharArray();
 		
-		assert contents.length == asChars.length;
+		if(contents.length != asChars.length) {
+			throw new RuntimeException("Room width and height does not match the description of the room");
+		}
 		
 		for (int i = 0; i < asChars.length; i++) {
 			contents[i] = fact.build(asChars[i]);
