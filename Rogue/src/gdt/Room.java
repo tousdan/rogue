@@ -4,9 +4,9 @@ public class Room {
 
 	public int width;
 	public int height;
-	public Cell[] contents;
+	public CellFactory[] contents;
 	
-	public Room(int width, int height, Cell[] contents) {
+	public Room(int width, int height, CellFactory[] contents) {
 		this.width = width;
 		this.height = height;
 		this.contents = contents;

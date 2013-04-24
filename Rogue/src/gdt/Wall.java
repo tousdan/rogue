@@ -4,13 +4,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
-public class Wall implements Cell{
+public class Wall extends Cell{
 	private Texture texture;
 	
-	public Wall() {
-		Pixmap map = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+	public Wall(int x, int y) {
+		super(x, y);
+		
+		Pixmap map = new Pixmap(Constants.TILE_SIZE, Constants.TILE_SIZE, Pixmap.Format.RGBA8888);
 		map.setColor(Color.DARK_GRAY);
-		map.fillRectangle(0, 0, 8, 8);
+		map.fillRectangle(0, 0, Constants.TILE_SIZE, Constants.TILE_SIZE);
 		
 		texture = new Texture(map);
 	}
@@ -29,7 +31,4 @@ public class Wall implements Cell{
 	public boolean interact(RogueObject requestor, String intent) {
 		return false;
 	}
-	
-	
-	
 }

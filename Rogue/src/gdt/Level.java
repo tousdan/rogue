@@ -6,12 +6,12 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 
 public class Level {
 	private final Cell[] level;
-	private final int width;
-	private final int height;
+	
+	public final int width;
+	public final int height;
 	
 	public Level(int width, int height) {
 		this.width = width;
@@ -24,16 +24,33 @@ public class Level {
 				
 				if(room != null) {
 					for(int c=0;c<room.contents.length; c++) {
-						Cell roomPart = room.contents[c];
+						CellFactory factory = room.contents[c];
 						
-						int y = c / room.width;
-						int x = c % room.width;
+						if(factory == null) {
+							continue;
+						}
 						
-						level[w * 16 + x + (h * 16 + y) * width] = roomPart;
+						int roomY = c / room.width;
+						int roomX = c % room.width;
+						
+						int x = w * 16 + roomX;
+						int y = h * 16 + roomY;
+						
+						setCell(level, factory.create(x, y));
 					}
 				}
 			}
 		}
+	}
+	
+	private void setCell(Cell[] level, Cell cell) {
+		level[cell.x + cell.y * width] = cell;
+	}
+
+	public Cell cell(int x, int y) {
+		assert x < width && x > 0;
+		assert y < height && y > 0;
+		return level[x + y * width];
 	}
 	
 	public Cell findRandomCell(boolean includeSolid) {
@@ -53,18 +70,6 @@ public class Level {
 		return spawnableCells.get(cellIndex);
 	}
 	
-	public Vector2 getCoords(Cell cell) {
-		if(cell == null) return null;
-		
-		for(int i=0;i<level.length;i++) {
-			if(cell == level[i]) {
-				return indexToCoords(i);
-			}
-		}
-		
-		return null;
-	}
-	
 	public void draw(SpriteBatch canvas) {
 		for(int i=0;i<level.length;i++) {
 			Cell c = level[i];
@@ -76,15 +81,8 @@ public class Level {
 			Texture tex = c.draw();
 			
 			if(tex != null) {
-				Vector2 coords = indexToCoords(i);
-				
-			
-				canvas.draw(tex, coords.x, coords.y);
+				canvas.draw(tex, c.x * Constants.TILE_SIZE, c.y * Constants.TILE_SIZE);
 			}
 		}
-	}
-	
-	private Vector2 indexToCoords(int i) {
-		return new Vector2(i % width * 8 , i / width * 8);
 	}
 }

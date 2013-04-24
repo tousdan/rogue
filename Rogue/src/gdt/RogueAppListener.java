@@ -6,43 +6,23 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 
 public class RogueAppListener implements ApplicationListener {
-	public static final int SCREEN_WIDTH = 1024;
-	public static final int SCREEN_HEIGHT = 768;
 	
-	public static final int CAMERA_WIDTH = 640;
-	public static final int CAMERA_HEIGHT = 460;
+	private static final int SCREEN_WIDTH = 1024;
+	private static final int SCREEN_HEIGHT = 768;
 	
-	private static final int LEVEL_WIDTH = 256;
-	private static final int LEVEL_HEIGHT = 256;
+	private static final int CAMERA_WIDTH = 640;
+	private static final int CAMERA_HEIGHT = 460;
 	
-	Cell playerCell;
-	Level level;
+	private Game game;
 	
-	Player player;
-	Rectangle player_loc;
-	
-	OrthographicCamera camera;
-	SpriteBatch batch;
-	
-	
+	private OrthographicCamera camera;
+	private SpriteBatch batch;
 	
 	@Override
 	public void create() {
-		level = new Level(LEVEL_WIDTH, LEVEL_HEIGHT);
-		
-		player = new Player();
-		
-		
-		playerCell = level.findRandomCell(false);
-		
-		if(playerCell.interact(player, Intents.MOVE)) {
-			player.setNewLocation(playerCell);
-		}
-		
-		player_loc = new Rectangle(10, 10, 64, 64);
+		game = new Game();
 		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(true, CAMERA_WIDTH, CAMERA_HEIGHT);
@@ -52,8 +32,7 @@ public class RogueAppListener implements ApplicationListener {
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
+		camera.setToOrtho(true, width, height);
 	}
 
 	boolean middlePressed = false;
@@ -68,12 +47,9 @@ public class RogueAppListener implements ApplicationListener {
 	    
 	    batch.setProjectionMatrix(camera.combined);
 	    batch.begin();
-	    
 	    	
-	    level.draw(batch);
+	    game.draw(batch);
 		
-	    Vector2 playerCoords = level.getCoords(playerCell);
-	    batch.draw(player.draw(), playerCoords.x, playerCoords.y);
 	    batch.end();
 	    
 	}

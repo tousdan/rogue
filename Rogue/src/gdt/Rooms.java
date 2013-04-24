@@ -6,7 +6,6 @@ import java.util.Random;
 
 public class Rooms {
 	private static List<Room> rooms = new ArrayList<>();
-	
 	private static Random rand = new Random();
 	
 	public static Room SQUARE = buildRoom(8, 8,
@@ -38,7 +37,7 @@ public class Rooms {
 	private static Room buildRoom(int width, int height, String contentsAsString) {
 		TextToCellFactory fact = new TextToCellFactory();
 		
-		Cell[] contents = new Cell[width * height];
+		CellFactory[] contents = new CellFactory[width * height];
 		char[] asChars = contentsAsString.toCharArray();
 		
 		assert contents.length == asChars.length;
@@ -52,17 +51,23 @@ public class Rooms {
 		rooms.add(r);
 		
 		return r;
-		
-		
 	}
 	
 	static class TextToCellFactory {
-		public Cell build(char c) {
+		public CellFactory build(char c) {
 			switch(c) {
 				case 'w':
-					return new Wall();
+					return new CellFactory() {
+						public Cell create(int x, int y) {
+							return new Wall(x, y);
+						}
+					};
 				case '_':
-					return new Floor();
+					return new CellFactory() {
+						public Cell create(int x, int y) {
+							return new Floor(x, y);
+						}
+					};
 				default:
 					return null;
 				 

@@ -5,17 +5,24 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Player implements Actor {
+	
 	private Texture character;
+	private Cell location;
 	
 	public Player() {
-		Pixmap map = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+		Pixmap map = new Pixmap(Constants.TILE_SIZE, Constants.TILE_SIZE, Pixmap.Format.RGBA8888);
 		map.setColor(Color.RED);
-		map.drawLine(0, 0, 8, 8);
+		map.drawLine(0, 0, Constants.TILE_SIZE, Constants.TILE_SIZE);
 		map.setColor(Color.ORANGE);
-		map.drawLine(8, 0, 0, 8);
+		map.drawLine(Constants.TILE_SIZE, 0, 0, Constants.TILE_SIZE);
 		
 		character = new Texture(map);
 	}
+	
+	public Cell location() {
+		return location;
+	}
+	
 	@Override
 	public Texture draw() {
 		return character;
@@ -26,7 +33,6 @@ public class Player implements Actor {
 	}
 	@Override
 	public void setNewLocation(Cell location) {
-		
+		this.location = location;
 	}
-
 }
