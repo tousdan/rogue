@@ -11,7 +11,6 @@ public class Rat extends Monster {
 	private Texture rat;
 	private Texture deadrat;
 	
-	private boolean dead = false;
 
 	public Rat() {
 		
@@ -37,25 +36,26 @@ public class Rat extends Monster {
 	
 	@Override
 	public void step(Game game) {
-		if(dead) return;
+		if(!alive()) return;
 		
 		game.moveActor(this, Direction.values()[new Random().nextInt(Direction.values().length)]);
 	}
 
 	@Override
 	public Texture draw() {
-		return dead ? deadrat : rat;
+		return alive() ? rat : deadrat;
 	}
 
 	@Override
 	public boolean interact(Game game, GameEngine engine, Actor requestor, String intent) {
-		if(dead) return false;
+		if(!alive()) return false;
 		
-		engine.performAttack(requestor, this);
-		return true;
-	}
-
-	public void kill() {
-		this.dead = true;
+		if(requestor == game.player) {
+			engine.performAttack(requestor, this);
+			return true;
+		}
+		
+		return false;
+		
 	}
 }

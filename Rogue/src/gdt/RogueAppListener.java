@@ -17,7 +17,7 @@ public class RogueAppListener extends InputAdapter implements ApplicationListene
 	private static final int SCREEN_HEIGHT = 768;
 	
 	private static final int CAMERA_WIDTH = 640;
-	private static final int CAMERA_HEIGHT = 460;
+	private static final int CAMERA_HEIGHT = 640;
 	
 	private Game game;
 	

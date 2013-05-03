@@ -20,30 +20,66 @@ public class Level {
 		this.height = height;
 		this.level = new Cell[width * height];
 		
-		for(int w=0; w < width / 16; w++) {
-			for(int h=0; h < height / 16 ; h++) {
+		Random rand = new Random();
+		int roomCount = rand.nextInt(Math.min(width, height) / 6 - 3) + 3;
 				
-				Room room = Rooms.anyRoom();
-				
-				if(room != null) {
-					for(int c=0;c<room.contents.length; c++) {
-						CellFactory factory = room.contents[c];
-						
-						if(factory == null) {
-							continue;
-						}
-						
-						int roomY = c / room.width;
-						int roomX = c % room.width;
-						
-						int x = w * 16 + roomX;
-						int y = h * 16 + roomY;
-						
-						setCell(level, factory.create(x, y));
+		for(int i=0; i < roomCount; i++) {
+			Room room = Rooms.anyRoom();
+			
+			Position roomAssigned = null;
+			for(int x=0; x < width - room.width && roomAssigned == null; x++) {
+				for(int y=0; y < height - room.height && roomAssigned == null; y++) {
+					if(isZoneFree(x, y, room.width, room.height)) {
+						roomAssigned = new Position(x, y);
 					}
 				}
 			}
+			
+			if(roomAssigned != null) {
+				for(int c=0;c<room.contents.length; c++) {
+					CellFactory factory = room.contents[c];
+					
+					if(factory == null) {
+						continue;
+					}
+					
+					int roomY = c / room.width;
+					int roomX = c % room.width;
+					
+					int x = roomAssigned.x + roomX;
+					int y = roomAssigned.y + roomY;
+					
+					setCell(level, factory.create(x, y));
+				}
+			}
 		}
+		
+		for(int i=0; i< this.level.length; i++) {
+			if(this.level[i] == null) {
+				Position p = indexToPosition(i);
+				this.level[i] = new Rock(p.x, p.y);
+			}
+		}
+	}
+	
+	private boolean isZoneFree(int x, int y, int width, int height) {
+		for(int i=x; i < x + width; i++) {
+			for(int j=y; j < y + height; j++) {
+				if(cell(i, j) != null) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	private Position indexToPosition(int i) {
+		if(i > this.level.length) {
+			return null;
+		}
+		
+		return new Position(i % width, i / width);
 	}
 	
 	private void setCell(Cell[] level, Cell cell) {
@@ -55,9 +91,12 @@ public class Level {
 			return null;
 		return level[x + y * width];
 	}
+	
 	public Cell cell(Position location) {
 		return cell(location.x, location.y);
 	}
+	
+	
 	public Cell cell(Locatable locatable) {
 		return cell(locatable.location());
 	}
@@ -137,7 +176,7 @@ public class Level {
 		
 		for (Cell cell : level) {
 			if(cell != null) {
-				if(!cell.isSolid() || includeSolid) {
+				if(!cell.isSolid() || includeSolid && cell.actor() == null) {
 					spawnableCells.add(cell);
 				}
 			}
