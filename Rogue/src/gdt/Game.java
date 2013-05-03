@@ -10,8 +10,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class Game {
 
-	private static final int LEVEL_WIDTH = 16 * 5;
-	private static final int LEVEL_HEIGHT = 16 * 5;
+	private static final int LEVEL_WIDTH = 80;
+	private static final int LEVEL_HEIGHT = 60;
 	
 	public final Level level;
 	public final Player player;
@@ -92,6 +92,7 @@ public class Game {
 			if(defender instanceof Rat) {
 				((Rat) defender).kill();
 			}
+			
 		}
 		
 	}

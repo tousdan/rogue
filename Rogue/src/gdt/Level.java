@@ -21,8 +21,14 @@ public class Level {
 		this.level = new Cell[width * height];
 		
 		Random rand = new Random();
-		int roomCount = rand.nextInt(Math.min(width, height) / 6 - 3) + 3;
-				
+		
+		//try and find a decent amount of rooms to generate.
+		int max = Math.max(width, height) / 5;
+		int min = Math.abs(max / 2);
+		
+		int roomCount = rand.nextInt(max - min) + min;
+		
+		//generate rooms and position them
 		for(int i=0; i < roomCount; i++) {
 			Room room = Rooms.anyRoom();
 			
@@ -49,15 +55,101 @@ public class Level {
 					int x = roomAssigned.x + roomX;
 					int y = roomAssigned.y + roomY;
 					
+					Cell cell = factory.create(x, y);
 					setCell(level, factory.create(x, y));
 				}
 			}
 		}
 		
+		//fill null with rocks!
 		for(int i=0; i< this.level.length; i++) {
 			if(this.level[i] == null) {
 				Position p = indexToPosition(i);
 				this.level[i] = new Rock(p.x, p.y);
+			}
+		}
+		
+		//connect walls of rooms at random
+		for(int y=0;y < height; y += 4) {
+			Cell start = null;
+			Cell ahead = cell(0, y);
+			Cell before = null;
+			Cell current;
+			for(int x=0; x<width; x++) {
+				current = ahead;
+				ahead = cell(x+1, y);
+				before = cell(x-1, y);
+				
+				if(start != null) {
+					if(current instanceof Wall) {
+						//thick walls?
+						if(!(ahead instanceof Wall)) {
+							//done!
+							setCell(level, new Floor(start.x, start.y));
+							
+							for(int i=start.x; i<=current.x; i++) {							
+								setCell(level, new Wall(i, y - 1));
+								setCell(level, new Floor(i, y));
+								setCell(level, new Wall(i, y + 1));
+							}
+							
+							setCell(level, new Floor(current.x, current.y));
+							
+							start = null;
+						}
+					} else if(current != null && current.isSolid()) {
+						//continue!!
+					} else {
+						start = null;
+					}
+				} else {
+					if(current instanceof Wall && (ahead != null && ahead.isSolid()) && (before != null && !before.isSolid())) {
+						//found a candidate.
+						start = current;
+					}
+				}
+			}
+		}
+		
+		//connect walls of rooms at random
+		for(int x=0;x < width; x += 4) {
+			Cell start = null;
+			Cell ahead = cell(x, 0);
+			Cell before = null;
+			Cell current;
+			for(int y=0; y<height; y++) {
+				current = ahead;
+				ahead = cell(x, y+1);
+				before = cell(x, y-1);
+				
+				if(start != null) {
+					if(current instanceof Wall) {
+						//thick walls?
+						if(!(ahead instanceof Wall)) {
+							//done!
+							setCell(level, new Floor(start.x, start.y));
+							
+							for(int i=start.y; i<=current.y; i++) {							
+								setCell(level, new Wall(x -1, i));
+								setCell(level, new Floor(x, i));
+								setCell(level, new Wall(x + 1, i));
+							}
+							
+							setCell(level, new Floor(current.x, current.y));
+							
+							start = null;
+						}
+					} else if(current != null && current.isSolid()) {
+						//continue!!
+					} else {
+						start = null;
+					}
+				} else {
+					if(current instanceof Wall && (ahead != null && ahead.isSolid()) && (before != null && !before.isSolid())) {
+						//found a candidate.
+						start = current;
+					}
+				}
 			}
 		}
 	}
