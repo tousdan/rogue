@@ -12,7 +12,7 @@ public abstract class Cell extends Position implements RogueObject, Locatable {
 		return this;
 	}
 	
-	abstract boolean isSolid();
+	public abstract boolean isSolid();
 
 	public Actor actor() {
 		return actor;

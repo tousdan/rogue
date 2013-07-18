@@ -27,7 +27,7 @@ public class Game {
 		this.engine = new Engine();
 		
 		positionPlayer();
-		addRats(25);
+		//addRats(25);
 	}
 	
 	public boolean moveActor(Actor actor, Direction direction) {

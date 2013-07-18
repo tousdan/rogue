@@ -9,14 +9,20 @@ public class Rock extends Cell {
 	private Texture texture;
 	
 	public Rock(int x, int y) {
-		super(x, y);
-		
-		Pixmap map = new Pixmap(Constants.TILE_SIZE, Constants.TILE_SIZE, Pixmap.Format.RGBA8888);
-		map.setColor(Color.DARK_GRAY);
-		map.fillRectangle(0, 0, Constants.TILE_SIZE, Constants.TILE_SIZE);
-		
-		texture = new Texture(map);
+		this(x, y, Color.DARK_GRAY);
 	}
+
+    public Rock(int x, int y, Color color) {
+        super(x, y);
+
+        Pixmap map = new Pixmap(Constants.TILE_SIZE, Constants.TILE_SIZE, Pixmap.Format.RGBA8888);
+        map.setColor(color);
+        map.fillRectangle(0, 0, Constants.TILE_SIZE, Constants.TILE_SIZE);
+
+        texture = new Texture(map);
+    }
+
+
 	
 	@Override
 	public Texture draw() {
@@ -30,7 +36,7 @@ public class Rock extends Cell {
 	}
 
 	@Override
-	boolean isSolid() {
+	public boolean isSolid() {
 		return true;
 	}
 
