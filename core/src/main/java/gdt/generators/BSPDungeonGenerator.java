@@ -19,14 +19,14 @@ public class BSPDungeonGenerator extends DungeonGeneratorBase {
 
     @Override
     void generate() {
-
+        System.out.println(width + " " + height);
         boolean horizontal = rand.nextBoolean();
 
-        //fill null with rocks!
+        //fill null with floor!
         for(int i=0; i< this.result.length; i++) {
             if(this.result[i] == null) {
                 Position p = indexToPosition(i);
-                this.result[i] = new Rock(p.x, p.y);
+                this.result[i] = new Floor(p.x, p.y);
             }
         }
 
@@ -34,24 +34,39 @@ public class BSPDungeonGenerator extends DungeonGeneratorBase {
         SubDungeon b;
 
         if(horizontal) {
-            int y = rand.nextInt(height -1);
+            int y = Math.max(rand.nextInt(height - 8), 8) ;
 
             a = new SubDungeon(0, width, 0, y);
-            b = new SubDungeon(0, width, y+1, height - y);
+            b = new SubDungeon(0, width, y, height - y);
         } else {
-            int x = rand.nextInt(width - 1);
+            int x = Math.max(rand.nextInt(width - 8), 8);
 
             a = new SubDungeon(0, x, 0, height);
-            b = new SubDungeon(x+1, width - x, 0, height);
+            b = new SubDungeon(x, width - x, 0, height);
         }
 
-        for(int x=a.x; x < a.width; x++) {
-            for(int y=a.y; y < a.height; y++) {
-                setCell(new Rock(x, y, Color.RED));
-            }
+
+        System.out.println(a);
+        System.out.println(b);
+        rockify(a);
+        rockify(b);
+    }
+
+    void rockify(SubDungeon dung) {
+        int topy = dung.y;
+        int boty = dung.y + dung.height - 1;
+        int leftx = dung.x;
+        int rightx = dung.width + dung.x - 1;
+
+        for(int x=leftx; x <= rightx; x++) {
+            setCell(new Rock(x, topy, Color.RED));
+            setCell(new Rock(x, boty, Color.RED));
         }
 
-        setCell(new Floor(0,0));
+        for(int y=topy; y <= boty; y++) {
+            setCell(new Rock(leftx, y, Color.RED));
+            setCell(new Rock(rightx, y, Color.RED));
+        }
     }
 
     class SubDungeon {
@@ -66,6 +81,16 @@ public class BSPDungeonGenerator extends DungeonGeneratorBase {
             this.width = width;
             this.y = y;
             this.height = height;
+        }
+
+        @Override
+        public String toString() {
+            return "SubDungeon{" +
+                    "x=" + x +
+                    ", width=" + width +
+                    ", y=" + y +
+                    ", height=" + height +
+                    '}';
         }
     }
 }

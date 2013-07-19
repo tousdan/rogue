@@ -13,26 +13,40 @@ public class Game {
 	private static final int LEVEL_WIDTH = 80;
 	private static final int LEVEL_HEIGHT = 60;
 	
-	public final Level level;
-	public final Player player;
+	public Level level;
+	public Player player;
 	
-	private final GameEngine engine;
+	private GameEngine engine;
 	
-	public final List<Monster> monsters = new ArrayList<Monster>();
-	
-	public Game() {
-		this.level = new Level(LEVEL_WIDTH, LEVEL_HEIGHT);
-		this.player = new Player();
-		
-		this.engine = new Engine();
-		
-		positionPlayer();
-		//addRats(25);
-	}
+	public List<Monster> monsters = new ArrayList<Monster>();
+
+    public void generateLevel() {
+        this.level = new Level(LEVEL_WIDTH, LEVEL_HEIGHT);
+        this.player = new Player();
+
+        this.engine = new Engine();
+        this.monsters = new ArrayList<Monster>();
+
+        positionPlayer();
+    }
 	
 	public boolean moveActor(Actor actor, Direction direction) {
 		return tryMoveActor(actor, level.getAdjacentCell(actor, direction));
 	}
+
+    public boolean moveActor(Actor actor, Direction direction, int times) {
+        if(times > 0) {
+            int c = times;
+
+            while(c > 0 && tryMoveActor(actor, level.getAdjacentCell(actor, direction))) {
+                c--;
+            }
+
+            return c == 0;
+        }
+
+        return false;
+    }
 	
 	public void runGameStep() {
 		for(AI ai : monsters) {

@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Rock extends Cell {
 
-	private Texture texture;
-	
 	public Rock(int x, int y) {
 		this(x, y, Color.DARK_GRAY);
 	}
@@ -15,18 +13,11 @@ public class Rock extends Cell {
     public Rock(int x, int y, Color color) {
         super(x, y);
 
-        Pixmap map = new Pixmap(Constants.TILE_SIZE, Constants.TILE_SIZE, Pixmap.Format.RGBA8888);
-        map.setColor(color);
-        map.fillRectangle(0, 0, Constants.TILE_SIZE, Constants.TILE_SIZE);
-
-        texture = new Texture(map);
     }
 
-
-	
 	@Override
 	public Texture draw() {
-		return texture;
+		return Textures.i().rock;
 	}
 
 	@Override

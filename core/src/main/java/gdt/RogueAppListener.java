@@ -27,6 +27,8 @@ public class RogueAppListener extends InputAdapter implements ApplicationListene
 	@Override
 	public void create() {
 		game = new Game();
+
+        game.generateLevel();;
 		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(true, CAMERA_WIDTH, CAMERA_HEIGHT);
@@ -43,6 +45,7 @@ public class RogueAppListener extends InputAdapter implements ApplicationListene
 
 	private Direction directionToMove = null;
 	private boolean hasMoveInput = false;
+    private boolean hasJumpMoveInput = false;
 	
 	static Map<Integer, Direction> movementKeys = new HashMap<Integer, Direction>();
 	
@@ -66,19 +69,27 @@ public class RogueAppListener extends InputAdapter implements ApplicationListene
 	@Override
 	public boolean keyDown(int key) {
 		if(movementKeys.containsKey(key)) {
+            hasJumpMoveInput = Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)
+                            || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT);
+
 			directionToMove = movementKeys.get(key);
 			hasMoveInput = true;
+
 			return true;
-		}
+		} else if(Keys.SPACE == key) {
+            game.generateLevel();
+        }
 		
 		return false;
 	}
 	
 	private void handleInput() {
 		if(hasMoveInput) {
-			game.moveActor(game.player, directionToMove);
+			game.moveActor(game.player, directionToMove, hasJumpMoveInput ? 5 : 1);
 			game.runGameStep();
 			hasMoveInput = false;
+            hasJumpMoveInput = false;
+            System.out.println(game.player.location());
 		}
 	}
 	
@@ -120,46 +131,4 @@ public class RogueAppListener extends InputAdapter implements ApplicationListene
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
-	/*private void handleInput() {
-		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
-			frostshock_loc.x -= 5;
-		} 
-		if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			frostshock_loc.x += 5;
-		} 
-		
-		if(Gdx.input.isKeyPressed(Keys.DOWN)) {
-			frostshock_loc.y += 5;
-		} 
-		
-		if(Gdx.input.isKeyPressed(Keys.UP)) {
-			frostshock_loc.y -= 5;
-		}
-		
-		if(frostshock_loc.x <= 0) {
-			frostshock_loc.x = 0;
-		} else if(frostshock_loc.x >= SCREEN_WIDTH - frostshock_loc.width) {
-			frostshock_loc.x = SCREEN_WIDTH - frostshock_loc.width;
-		}
-		
-		if(frostshock_loc.y <= 0) {
-			frostshock_loc.y = 0;
-		} else if(frostshock_loc.y >= SCREEN_HEIGHT - frostshock_loc.height) {
-			frostshock_loc.y = SCREEN_HEIGHT - frostshock_loc.height;
-		}
-	}
-	
-	private void handleCameraInput() {
-		if(Gdx.input.isKeyPressed(Keys.X)) {
-			camera.zoom += 0.2;
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.Z)) {
-			camera.zoom -= 0.2;
-		}
-		
-		camera.zoom = Math.max(camera.zoom, 1);
-	}*/
 }

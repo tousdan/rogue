@@ -20,4 +20,12 @@ public class Position implements Locatable {
 		return distanceTo(locatable.location());
 	}
 	private int square(int x) { return x * x; }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

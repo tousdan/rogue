@@ -20,4 +20,6 @@ public abstract class Cell extends Position implements RogueObject, Locatable {
 	public void actor(Actor actor) {
 		this.actor = actor;
 	}
+
+
 }

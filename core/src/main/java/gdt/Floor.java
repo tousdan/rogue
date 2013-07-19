@@ -10,17 +10,11 @@ public class Floor extends Cell {
 	
 	public Floor(int x, int y) {
 		super(x, y);
-		
-		Pixmap map = new Pixmap(Constants.TILE_SIZE, Constants.TILE_SIZE, Pixmap.Format.RGBA8888);
-		map.setColor(Color.GRAY);
-		map.fillRectangle(0, 0, Constants.TILE_SIZE, Constants.TILE_SIZE);
-		
-		texture = new Texture(map);
 	}
 	
 	@Override
 	public Texture draw() {
-		return texture;
+		return Textures.i().floor;
 	}
 
 	@Override
