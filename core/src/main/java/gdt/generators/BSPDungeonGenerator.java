@@ -20,7 +20,7 @@ public class BSPDungeonGenerator extends DungeonGeneratorBase {
     @Override
     void generate() {
         System.out.println(width + " " + height);
-        boolean horizontal = rand.nextBoolean();
+
 
         //fill null with floor!
         for(int i=0; i< this.result.length; i++) {
@@ -30,42 +30,32 @@ public class BSPDungeonGenerator extends DungeonGeneratorBase {
             }
         }
 
-        SubDungeon a;
-        SubDungeon b;
+        SubDungeon all = new SubDungeon(0, width, 0, height);
 
-        if(horizontal) {
-            int y = Math.max(rand.nextInt(height - 8), 8) ;
+        all.split(8);
 
-            a = new SubDungeon(0, width, 0, y);
-            b = new SubDungeon(0, width, y, height - y);
-        } else {
-            int x = Math.max(rand.nextInt(width - 8), 8);
-
-            a = new SubDungeon(0, x, 0, height);
-            b = new SubDungeon(x, width - x, 0, height);
-        }
-
-
-        System.out.println(a);
-        System.out.println(b);
-        rockify(a);
-        rockify(b);
+        outline(all);
     }
 
-    void rockify(SubDungeon dung) {
-        int topy = dung.y;
-        int boty = dung.y + dung.height - 1;
-        int leftx = dung.x;
-        int rightx = dung.width + dung.x - 1;
+    void outline(SubDungeon dung) {
+        if(dung.subsec_a != null) {
+            outline(dung.subsec_a);
+            outline(dung.subsec_b);
+        }  else {
+            int topy = dung.y;
+            int boty = dung.y + dung.height - 1;
+            int leftx = dung.x;
+            int rightx = dung.width + dung.x - 1;
 
-        for(int x=leftx; x <= rightx; x++) {
-            setCell(new Rock(x, topy, Color.RED));
-            setCell(new Rock(x, boty, Color.RED));
-        }
+            for(int x=leftx; x <= rightx; x++) {
+                setCell(new Floor(x, topy, dung.color));
+                setCell(new Floor(x, boty, dung.color));
+            }
 
-        for(int y=topy; y <= boty; y++) {
-            setCell(new Rock(leftx, y, Color.RED));
-            setCell(new Rock(rightx, y, Color.RED));
+            for(int y=topy; y <= boty; y++) {
+                setCell(new Floor(leftx, y, dung.color));
+                setCell(new Floor(rightx, y, dung.color));
+            }
         }
     }
 
@@ -76,11 +66,18 @@ public class BSPDungeonGenerator extends DungeonGeneratorBase {
         int y;
         int height;
 
+        Color color;
+
+        SubDungeon subsec_a;
+        SubDungeon subsec_b;
+
+
         SubDungeon(int x, int width, int y, int height) {
             this.x = x;
             this.width = width;
             this.y = y;
             this.height = height;
+            this.color = new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1);
         }
 
         @Override
@@ -90,7 +87,34 @@ public class BSPDungeonGenerator extends DungeonGeneratorBase {
                     ", width=" + width +
                     ", y=" + y +
                     ", height=" + height +
+                    ", has_a=" + (subsec_a != null) +
+                    ", has_b=" + (subsec_b != null) +
                     '}';
+        }
+
+        public void split(int min_size) {
+
+            boolean horizontal = rand.nextBoolean();
+            double split_percent = rand.nextFloat();
+
+            System.out.println(split_percent);
+            int y = (int) Math.round(height * split_percent);
+            int x = (int) Math.round(width * split_percent);
+
+            if(horizontal && this.height > min_size && y > min_size && y < height)  {
+                subsec_a = new SubDungeon(this.x, width, this.y, y);
+                subsec_b = new SubDungeon(this.x, width, this.y + y, height - y);
+            } else if(!horizontal && this.width > min_size && x > min_size && x < height) {
+                subsec_a = new SubDungeon(this.x, x, this.y, height);
+                subsec_b = new SubDungeon(this.x + x, width - x, this.y, height);
+            }
+
+            if(subsec_a != null) {
+                subsec_a.split(min_size);
+                subsec_b.split(min_size);
+            }
+
+
         }
     }
 }

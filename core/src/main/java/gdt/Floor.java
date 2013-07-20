@@ -10,11 +10,19 @@ public class Floor extends Cell {
 	
 	public Floor(int x, int y) {
 		super(x, y);
+
+        this.texture = Textures.i().floor;
 	}
+
+    public Floor(int x, int y, Color color) {
+        this(x, y);
+
+        this.texture = Textures.i().coloredFloor(color);
+    }
 	
 	@Override
 	public Texture draw() {
-		return Textures.i().floor;
+		return texture;
 	}
 
 	@Override

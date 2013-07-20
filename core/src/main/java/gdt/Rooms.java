@@ -29,6 +29,27 @@ public class Rooms {
 		   "    w_w " +
 		   "     w  " 
 	);
+
+    public static Room roomFor(int width, int height) {
+        if(width < 5 || height < 5) {
+            return null;
+        }
+
+        CellFactory cf = new CellFactory() {
+            @Override
+            public Cell create(int x, int y) {
+                return new Floor(x, y);
+            }
+        };
+
+        CellFactory[] contents = new CellFactory[(width - 2) * (height - 2)];
+
+        for(int i=0;i<contents.length;i++) {
+            contents[i] = cf;
+        }
+
+        return new Room(width - 2, height - 2, contents);
+    }
 	
 	public static Room anyRoom() {		
 		return rooms.get(rand.nextInt(rooms.size()));
