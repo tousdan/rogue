@@ -14,6 +14,7 @@ public final class  Textures {
     public final Texture character;
     public final Texture rock;
     public final Texture floor;
+    public final Texture wall;
 
     private final Map<Color, Texture> coloredfloors;
 
@@ -52,6 +53,12 @@ public final class  Textures {
         coloredfloors = new HashMap<Color, Texture>();
 
         floor = coloredFloor(Color.GRAY);
+
+        map = new Pixmap(Constants.TILE_SIZE, Constants.TILE_SIZE, Pixmap.Format.RGBA8888);
+        map.setColor(Color.BLACK);
+        map.fillRectangle(0, 0, Constants.TILE_SIZE, Constants.TILE_SIZE);
+
+        wall = new Texture(map);
     }
 
     public static Textures i() {

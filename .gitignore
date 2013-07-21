@@ -5,3 +5,6 @@
 *.ear
 *.jar
 *.un~
+
+# IDE stuff
+build.log

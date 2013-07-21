@@ -1,5 +1,7 @@
 package gdt;
 
+import com.badlogic.gdx.graphics.Color;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,24 +33,31 @@ public class Rooms {
 	);
 
     public static Room roomFor(int width, int height) {
-        if(width < 5 || height < 5) {
-            return null;
-        }
-
-        CellFactory cf = new CellFactory() {
+        CellFactory wall = new CellFactory() {
+            @Override
+            public Cell create(int x, int y) {
+                return new Wall(x, y);
+            }
+        };
+        CellFactory floor = new CellFactory() {
             @Override
             public Cell create(int x, int y) {
                 return new Floor(x, y);
             }
         };
 
-        CellFactory[] contents = new CellFactory[(width - 2) * (height - 2)];
+        CellFactory[] contents = new CellFactory[width * height];
 
         for(int i=0;i<contents.length;i++) {
-            contents[i] = cf;
+            int roomY = i / width;
+            int roomX = i % width;
+
+            boolean isEdge = roomX == 0 || roomX == width - 1 || roomY == 0 || roomY == height -1;
+
+            contents[i] = isEdge ? wall : floor;
         }
 
-        return new Room(width - 2, height - 2, contents);
+        return new Room(width, height, contents);
     }
 	
 	public static Room anyRoom() {		
