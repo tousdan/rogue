@@ -12,6 +12,10 @@ import gdt.generators.BSPDungeonGenerator;
 import gdt.generators.MyDungeonGenerator;
 
 public class Level {
+    private final Direction[] movableDirections = new Direction[] {
+        Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.UP
+    };
+
 	private final Cell[] level;
 	
 	public final int width;
@@ -24,9 +28,6 @@ public class Level {
 
 		this.level = new BSPDungeonGenerator(width, height).build();
 	}
-
-
-
 
 
 	public Cell cell(int x, int y) {
@@ -48,9 +49,18 @@ public class Level {
 		return x < width && x >= 0
 			&& y < height && y >= 0;
 	}
+
 	public boolean inBounds(Position location) {
 		return inBounds(location.x, location.y);
 	}
+
+    public boolean canSee(Locatable a, Locatable b) {
+        Position aPos = a.location();
+        Position bPos = b.location();
+
+        return aPos.distanceTo(bPos) <= 10;
+    }
+
 	public boolean inBounds(Locatable locatable) {
 		return inBounds(locatable.location());
 	}
@@ -81,7 +91,7 @@ public class Level {
 		
 		return result;
 	}
-	
+
 	public List<Cell> getAdjacentCells(Locatable locatable, int radius, boolean round) {
 		List<Cell> result = new ArrayList<Cell>();
 		
@@ -93,8 +103,8 @@ public class Level {
 		Position topLeft = initial.translated(-radius, -radius);
 		Position bottomRight = initial.translated(radius, radius);
 		
-		for(int x=topLeft.x; x < bottomRight.x; x++) {
-			for(int y = topLeft.y; y < bottomRight.y; y++) {
+		for(int x=topLeft.x; x <= bottomRight.x; x++) {
+			for(int y = topLeft.y; y <= bottomRight.y; y++) {
 				Position current = new Position(x, y);
 				if(inBounds(current)) {
 					result.add(cell(current));
@@ -144,7 +154,7 @@ public class Level {
 			if(c == null) {
 				continue;
 			}
-			
+
 			Texture tex = c.draw();
 			
 			if(tex != null) {

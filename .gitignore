@@ -1,3 +1,4 @@
+.idea
 *.class
 
 # Package Files #
@@ -8,3 +9,4 @@
 
 # IDE stuff
 build.log
+*.iml

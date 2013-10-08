@@ -18,7 +18,6 @@ public class BSPDungeonGenerator extends DungeonGeneratorBase {
     void generate() {
         System.out.println(width + " " + height);
 
-
         //fill null with floor!
         for(int i=0; i< this.result.length; i++) {
             if(this.result[i] == null) {
@@ -171,7 +170,8 @@ public class BSPDungeonGenerator extends DungeonGeneratorBase {
 
                     } else {
                         //Vertical
-
+                        setCell(new Floor(x +subsec_a.width-2, y + height / 2));
+                        setCell(new Floor(x + subsec_a.width+1, y + height / 2));
                     }
                 } else {
                     subsec_a.link();

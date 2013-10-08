@@ -2,7 +2,9 @@ package gdt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
@@ -12,7 +14,10 @@ public class Game {
 
 	private static final int LEVEL_WIDTH = 80;
 	private static final int LEVEL_HEIGHT = 60;
-	
+
+    private CellPathResolver resolver;
+    private List<Cell> playerResolvedPath;
+
 	public Level level;
 	public Player player;
 	
@@ -52,6 +57,9 @@ public class Game {
 		for(AI ai : monsters) {
 			ai.step(this);
 		}
+
+        resolver = new CellPathResolver(level, level.cell(5, 5));
+        playerResolvedPath = resolver.compute(player.location());
 	}
 	
 	private boolean tryMoveActor(Actor actor, Cell destination) {
@@ -85,6 +93,19 @@ public class Game {
 			Cell monsterLocation = monster.location();
 			batch.draw(monster.draw(), monsterLocation.x * Constants.TILE_SIZE, monsterLocation.y * Constants.TILE_SIZE);
 		}
+
+
+
+        if(playerResolvedPath != null) {
+            for(Map.Entry<Cell, Double> entry : resolver.mindists.entrySet()) {
+                Cell c = entry.getKey();
+                batch.draw(Textures.i().coloredFloor(Color.ORANGE), c.x * Constants.TILE_SIZE, c.y * Constants.TILE_SIZE);
+            }
+
+            for(Cell c : playerResolvedPath) {
+                batch.draw(Textures.i().coloredFloor(Color.GREEN), c.x * Constants.TILE_SIZE, c.y * Constants.TILE_SIZE);
+            }
+        }
 	}
 	
 	
